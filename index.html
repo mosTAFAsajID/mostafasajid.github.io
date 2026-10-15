@@ -281,8 +281,8 @@ nav,.meta,.about .txt,.contact>p,.copy{font-family:var(--futura)}
         <a class="key k-wide" href="#" data-copy="mos.tafazeeb@proton.me" data-done="COPIED" aria-label="Hire me: copy email address" data-wave="rectified" data-f="1">HIRE ME</a>
         <a class="key" href="https://www.facebook.com/mos.tafazeeb.ran/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" data-wave="clipped" data-f="3.5">FB</a>
         <a class="key k-wide" href="#" data-copy="+8801601901623" data-done="COPIED" aria-label="Call me: copy phone number" data-wave="pulse" data-f="2">CALL ME</a>
-        <a class="key k-db" href="https://dribbble.com/mostafaSajid101" target="_blank" rel="noopener noreferrer" aria-label="Dribbble" data-wave="stair" data-f="4">DB</a>
-        <a class="key k-bh" href="https://www.behance.net/mostafasajid101" target="_blank" rel="noopener noreferrer" aria-label="Behance" data-wave="double" data-f="5">BH</a>
+        <a class="key" href="https://github.com/mosTAFAsajID" target="_blank" rel="noopener noreferrer" aria-label="GitHub" data-wave="stair" data-f="4"><svg viewBox="0 0 16 16" width="26" height="26" fill="currentColor" aria-hidden="true" style="display:block"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a>
+        <a class="key" href="#" data-emoji="1" aria-label="Show a random emoji" data-wave="double" data-f="5"></a>
       </div>
     </div>
     <div class="vent" aria-hidden="true"></div>
@@ -629,6 +629,7 @@ document.getElementById('copy').addEventListener('click', async (e) => {
     if(!seen){ seen=true; x=tx; y=ty; }
     b.classList.add('on');
     ts=(e.target.closest && e.target.closest('a,button,.key'))?2.4:1;
+    b.style.opacity=(e.target.closest && e.target.closest('[data-emoji]'))?'0':'';   // keep the blob off the emoji key so the emoji stays visible
   },{passive:true});
   root.addEventListener('mouseleave',()=>b.classList.remove('on'));
   root.addEventListener('mouseenter',()=>{ if(seen) b.classList.add('on'); });
@@ -694,6 +695,27 @@ document.getElementById('copy').addEventListener('click', async (e) => {
   addEventListener('resize',fit); addEventListener('load',fit);
   if(img.complete) fit(); else img.addEventListener('load',fit);
   if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fit);
+})();
+
+// Emoji key: blank until clicked, then shows a different emoji for 2 seconds
+(function(){
+  const k=document.querySelector('.key[data-emoji]'); if(!k) return;
+  const pool=['😄','😎','🤖','⚡','🔥','🚀','🎉','🧠','🛠️','💡','🔋','🎯','👾','🧲','📡','🦾','😂','🤯','🥳','🌟'];
+  let bag=[], last='', timer;
+  function next(){
+    if(!bag.length){
+      bag=pool.slice();
+      for(let i=bag.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [bag[i],bag[j]]=[bag[j],bag[i]]; }
+      if(bag[bag.length-1]===last) bag.unshift(bag.pop());   // never repeat the previous emoji back-to-back
+    }
+    return last=bag.pop();
+  }
+  k.addEventListener('click',e=>{
+    e.preventDefault();
+    k.textContent=next(); k.style.fontSize='28px';
+    clearTimeout(timer);
+    timer=setTimeout(()=>{ k.textContent=''; k.style.fontSize=''; },2000);
+  });
 })();
 </script>
 </body>
